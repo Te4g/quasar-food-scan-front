@@ -1,0 +1,14 @@
+{
+  "name": "quasar-food",
+  "version": "0.0.1",
+  "description": "A Quasar Framework app",
+  "author": "Te4g",
+  "private": true,
+  "dependencies": {
+    "@capacitor/cli": "^1.0.0",
+    "@capacitor/core": "^1.0.0",
+    "@capacitor/ios": "^2.0.1",
+    "phonegap-plugin-barcodescanner": "^8.1.0",
+    "vue": "^2.6.11"
+  }
+}

@@ -29,8 +29,10 @@
         <q-item-label
           header
           class="text-grey-8"
+          v-if="currentUser"
         >
-          Essential Links
+          Hello {{ currentUser.name }}
+          <q-btn @click="logout">Logout</q-btn>
         </q-item-label>
         <EssentialLink
           v-for="link in essentialLinks"
@@ -73,18 +75,29 @@ export default {
           link: {name: 'scan'}
         },
         {
-          title: 'Login',
-          caption: 'Log to your account',
-          icon: 'account_circle',
-          link: {name: 'login'}
-        },
-        {
           title: 'Pantry',
           caption: 'Your food stocks',
           icon: 'kitchen',
           link: {name: 'pantry'}
+        },
+        {
+          title: 'Profile',
+          caption: 'Your profile',
+          icon: 'account_circle',
+          link: {name: 'profile'}
         }
       ]
+    }
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/logout')
+      this.$router.push('')
     }
   }
 }

@@ -10,7 +10,7 @@
 		</div>
 		<div class="row q-mb-md">
 			<q-input
-				v-model="formData.email"
+				v-model="user.email"
 				:rules="[ val => isValidEmailAddress(val) || 'Please enter a valid email address.']"
 				ref="email"
         type="email"
@@ -22,7 +22,7 @@
 		</div>
     <div class="row q-mb-md" v-if="this.tab === 'register'">
       <q-input
-        v-model="formData.name"
+        v-model="user.name"
         :rules="[ val => val.length >= 1 || 'Please write something ... :(']"
         ref="name"
         lazy-rules
@@ -33,7 +33,7 @@
     </div>
 		<div class="row q-mb-md">
 			<q-input
-				v-model="formData.password"
+				v-model="user.password"
 				:rules="[ val => val.length >= 6 || 'Please enter at least 6 characters.']"
 				ref="password"
 				lazy-rules
@@ -54,41 +54,61 @@
 </template>
 
 <script>
-	import { mapActions } from 'vuex'
+  import User from "src/models/user";
 
 	export default {
 		props: ['tab'],
 		data() {
 			return {
-				formData: {
-					email: '',
-					password: '',
-          name: ''
-				}
+			  user: new User(),
+        isLoading: false,
+        submitted: false,
+        successful: false,
+        message: '',
 			}
 		},
-		methods: {
-			...mapActions('auth', ['registerUser', 'loginUser']),
+    computed: {
+      loggedIn() {
+        return this.$store.state.auth.status.loggedIn
+      }
+    },
+    created() {
+		  if (this.loggedIn) {
+		    this.$router.push('')
+      }
+    },
+    methods: {
 			isValidEmailAddress(email) {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase())
 			},
 			submitForm() {
+			  this.isLoading = true
 				this.$refs.email.validate()
 				this.$refs.password.validate()
 				if (!this.$refs.email.hasError && !this.$refs.password.hasError) {
 					if (this.tab === 'register') {
-            this.$axios
-              .post('https://gaetan-rouseyrol.dev/api/users', this.registerUser(this.formData))
-              .then(response => (this.info = response))
-              .catch(error => alert(error))
+            this.submitted = true
+            this.$store.dispatch('auth/register', this.user).then(
+              data => {
+                this.message = data.message
+                this.successful = true
+              },
+              error => {
+                this.message = (error.response && error.response.data) || error.message || error.toString()
+                this.successful = false
+              }
+            )
 					}
 					else {
-            this.$axios
-              .post('https://gaetan-rouseyrol.dev/api/login_check')
-              .then(response => (this.info = response))
-            this.loginUser(this.formData)
-					}
+					  this.$store.dispatch('auth/login', this.user).then( () => {
+					    this.$router.push('profile')
+            },
+            error => {
+					    this.isLoading = false
+              this.message = (error.response && error.response.data) || error.message || error.toString()
+            })
+          }
 				}
 			}
 		},

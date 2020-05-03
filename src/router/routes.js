@@ -4,13 +4,15 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'home', component: () => import('pages/Index.vue') },
+      { path: '', name: 'home', component: () => import('pages/Home.vue') },
       { path: 'scan', name: 'scan', component: () => import('pages/Scan.vue') },
-      { path: 'login', name: 'login', component: () => import('pages/Login.vue') },
-      { path: 'pantry', name: 'pantry', component: () => import('pages/Pantry.vue') }
+      { path: 'pantry', name: 'pantry', component: () => import('pages/Pantry.vue') },
+      { path: 'profile', name: 'profile', component: () => import('pages/Profile.vue') }
   ]
   }
 ]
+
+
 
 // Always leave this as last one
 if (process.env.MODE !== 'ssr') {

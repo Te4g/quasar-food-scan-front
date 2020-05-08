@@ -1,15 +1,19 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
+  <q-page class="flex flex-center column">
+    <div>
+      <img
       alt="Quasar logo"
       src="~assets/food-scan.png"
-    >
-    <h3>Hello </h3>
+      >
+    </div>
+    <div>
+      <h3>Hello </h3>
+    </div>
   </q-page>
 </template>
 
 <script>
-export default {
-  name: 'PageIndex'
-}
+    export default {
+        name: 'PageIndex'
+    }
 </script>

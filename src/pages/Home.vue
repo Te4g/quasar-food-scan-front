@@ -1,20 +1,21 @@
 <template>
-  <q-page>
-    <Index v-if="currentUser" />
-    <Login v-else/>
+  <q-page class="flex flex-center column">
+    <div>
+      <img
+        alt="Quasar logo"
+        src="~assets/food-scan.png"
+      >
+    </div>
+    <div>
+      <h3>Hello </h3>
+    </div>
   </q-page>
 </template>
 
 <script>
-  import Login from "pages/Login";
-  import Index from "components/Index";
 
   export default {
     name: 'home',
-    components: {
-      Login,
-      Index
-    },
     computed: {
       currentUser() {
         return this.$store.state.auth.user;

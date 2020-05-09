@@ -20,6 +20,7 @@
     </q-header>
 
     <q-drawer
+      v-if="currentUser"
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -29,9 +30,8 @@
         <q-item-label
           header
           class="text-grey-8"
-          v-if="currentUser"
         >
-          Hello {{ currentUser.name }}
+          Hello
           <q-btn @click="logout">Logout</q-btn>
         </q-item-label>
         <EssentialLink
@@ -97,7 +97,7 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('auth/logout')
-      this.$router.push('')
+      this.$router.push('/login')
     }
   }
 }

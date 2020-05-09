@@ -74,7 +74,7 @@
     },
     created() {
 		  if (this.loggedIn) {
-		    this.$router.push('')
+		    this.$router.push('/profile')
       }
     },
     methods: {
@@ -102,7 +102,7 @@
 					}
 					else {
 					  this.$store.dispatch('auth/login', this.user).then( () => {
-					    this.$router.push('profile')
+                this.$router.push('profile')
             },
             error => {
 					    this.isLoading = false

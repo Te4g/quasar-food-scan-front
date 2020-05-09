@@ -25,6 +25,7 @@
 
       <q-card-actions>
         <q-btn flat color="primary" label="Ajouter au repas" />
+        <q-btn flat color="primary" label="Ajouter au stock" @click="addToStock" />
 
         <q-space />
 
@@ -102,11 +103,11 @@ export default {
       }
   },
   methods: {
-    scanSuccessCallback: function(result) {
+    scanSuccessCallback (result) {
       this.$axios.get(`${this.url}${result.text}.json`).then(response => { this.product = response.data })
       this.scanned = true
     },
-    scan: function () {
+    scan () {
       cordova.plugins.barcodeScanner.scan(
         this.scanSuccessCallback,
         function (error) {
@@ -127,8 +128,15 @@ export default {
         }
       )
     },
-    clear: function() {
+    clear () {
      this.scanned = false
+    },
+    addToStock () {
+      this.$axios.post('https://192.168.0.21:8000/api/products', {
+        code: this.product.product.code,
+        isInStock: true,
+        details: this.product
+      })
     }
   }
 }

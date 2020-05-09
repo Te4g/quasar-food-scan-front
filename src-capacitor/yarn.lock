@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@capacitor/android@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@capacitor/android/-/android-2.1.0.tgz#09dd063bb90424fb7fda9a86113584ace6072c88"
+  integrity sha512-20t6Ep4cVp6X/7tz3BzvNyqv6WEMfZr4VLA3nQC7WxTLfrYSWWaP8vaKvTFn8u56qCSoCUwYmYlpkib38ptwJg==
+
 "@capacitor/cli@^1.0.0":
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/@capacitor/cli/-/cli-1.5.2.tgz#f5abb08f339113a308d3590a9c2219fcdcd73069"

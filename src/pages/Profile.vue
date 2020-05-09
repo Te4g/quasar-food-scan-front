@@ -2,21 +2,17 @@
   <div class="container">
     <header class="jumbotron">
       <h3>
-        <strong>{{currentUser.name}}</strong> Profile
+        <strong>{{userData.name}}</strong> Profile
       </h3>
     </header>
-    <div>{{ data }}</div>
-    <p>
+    <div>{{ userData }}</div>
+    <p v-if="currentUser">
       <strong>Token:</strong>
       {{currentUser.token.substring(0, 20)}} ... {{currentUser.token.substr(currentUser.token.length - 20)}}
     </p>
     <p>
-      <strong>Id:</strong>
-      {{currentUser.id}}
-    </p>
-    <p>
       <strong>Email:</strong>
-      {{currentUser.email}}
+      {{userData.email}}
     </p>
   </div>
 </template>
@@ -28,7 +24,7 @@
       name: "Profile",
       data() {
         return {
-          data: ''
+          userData: ''
         }
       },
       computed: {
@@ -38,11 +34,11 @@
       },
       mounted() {
         if (!this.currentUser) {
-          this.$router.push('');
+          this.$router.push('/login');
         }
-        UserService.getUserBoard().then(
-          response => {this.data = response},
-          error => {this.data =
+        UserService.getUserInfo().then(
+          response => {this.userData = response},
+          error => {this.userData =
             (error.response && error.response.data) ||
             error.message ||
             error.toString();}

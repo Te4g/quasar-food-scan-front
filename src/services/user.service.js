@@ -1,5 +1,6 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import { LocalStorage } from 'quasar'
 
 const API_URL = 'https://gaetan-rouseyrol.dev/api';
 
@@ -8,8 +9,15 @@ class UserService {
     return axios.get(API_URL + '/pantries');
   }
 
-  getUserBoard() {
-    return axios.get(API_URL + '/users.json', { headers: authHeader() });
+  getUserInfo() {
+    return axios.get(API_URL + '/users/me.json', { headers: authHeader() }).then(
+      response => {
+      if (response.data) {
+        LocalStorage.set('user.data', JSON.stringify(response.data));
+      }
+      console.log(LocalStorage.getItem('user.data'))
+      return response.data;
+    });
   }
 
   getModeratorBoard() {

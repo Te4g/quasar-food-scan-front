@@ -7,11 +7,11 @@ const routes = [
       { path: '', name: 'home', component: () => import('pages/Home.vue') },
       { path: 'scan', name: 'scan', component: () => import('pages/Scan.vue') },
       { path: 'pantry', name: 'pantry', component: () => import('pages/Pantry.vue') },
-      { path: 'profile', name: 'profile', component: () => import('pages/Profile.vue') }
+      { path: 'profile', name: 'profile', component: () => import('pages/Profile.vue') },
+      { path: 'login', name: 'login', component: () => import('pages/Login.vue') }
   ]
   }
 ]
-
 
 
 // Always leave this as last one

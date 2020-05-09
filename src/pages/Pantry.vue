@@ -5,22 +5,15 @@
 </template>
 
 <script>
-  import UserService from '../services/user.service'
   export default {
     name: 'PantryPage',
     data () {
       return {
-        data: ''
+        products: ''
       }
     },
     mounted() {
-      UserService.getPantries().then(
-        response => {this.data = response},
-        error => {this.data =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();}
-      )
+      this.$axios.get('https://192.168.0.21:8000/api').then(response => { this.product = response.data })
     }
   }
 </script>

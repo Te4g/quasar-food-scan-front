@@ -1,6 +1,8 @@
 import AuthService from '../services/auth.service';
+import { LocalStorage } from 'quasar'
 
-const user = JSON.parse(localStorage.getItem('user'));
+
+const user = JSON.parse(LocalStorage.getItem('user'));
 const initialState = user
   ? { status: { loggedIn: true }, user }
   : { status: { loggedIn: false }, user: null };

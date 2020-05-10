@@ -1,5 +1,6 @@
 <template>
   <q-page>
+    <div id="scan" v-show="cameraStatus === 1"></div>
     <q-card v-if="scanned" class="my-card" flat bordered>
       <q-img
         :src="product.product.image_front_url"
@@ -91,47 +92,77 @@
 </template>
 
 <script>
+  import Quagga from 'quagga'
+
 export default {
   name: 'scanner',
   data() {
-      return {
-        detail: 'ajouter détails produit',
-        expanded: false,
-        product: '',
-        url: 'https://world.openfoodfacts.org/api/v0/product/',
-        scanned: false
-      }
+    return {
+      detail: 'ajouter détails produit',
+      expanded: false,
+      product: '',
+      url: 'https://world.openfoodfacts.org/api/v0/product/',
+      scanned: false,
+      cameraStatus: 0
+    }
   },
   methods: {
-    scanSuccessCallback (result) {
-      this.$axios.get(`${this.url}${result.text}.json`).then(response => { this.product = response.data })
-      this.scanned = true
-    },
-    scan () {
-      cordova.plugins.barcodeScanner.scan(
-        this.scanSuccessCallback,
-        function (error) {
-          alert("Scanning failed: " + error);
+    scan() {
+      this.cameraStatus = 1
+      Quagga.init({
+        inputStream: {
+          name: 'Live',
+          type: 'LiveStream',
+          // constraints: {
+          //   width: 300,
+          //   height: 300
+          // },
+          area: { // defines rectangle of the detection/localization area
+            top: "0%",    // top offset
+            right: "0%",  // right offset
+            left: "0%",   // left offset
+            bottom: "0%"  // bottom offset
+          },
+          target: document.querySelector('#scan')
         },
-        {
-          preferFrontCamera: false, // iOS and Android
-          showFlipCameraButton: true, // iOS and Android
-          showTorchButton: true, // iOS and Android
-          torchOn: false, // Android, launch with the torch switched on (if available)
-          saveHistory: true, // Android, save scan history (default false)
-          prompt: "Place a barcode inside the scan area", // Android
-          resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-          formats: "EAN_13", // default: all but PDF_417 and RSS_EXPANDED
-          orientation: "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
-          disableAnimations: false, // iOS
-          disableSuccessBeep: false // iOS and Android
+        locate: true,
+        frequency: 1,
+        decoder: {
+          readers: [
+            'ean_reader'
+          ],
+          multiple: false
+        },
+        numOfWorkers: navigator.hardwareConcurrency
+        // locate: false
+      }, (err) => {
+        if (err) {
+          console.log(err)
+          return
         }
-      )
+        console.log('Initialization finished. Ready to start')
+        Quagga.start()
+        Quagga.onDetected(this.onDetected)
+      })
     },
-    clear () {
-     this.scanned = false
+    onDetected(data) {
+      console.log(data.codeResult.code)
+      this.cameraStatus = 0
+      this.$axios.get(`${this.url}${data.codeResult.code}.json`).then(response => {
+        this.product = response.data
+      })
+      this.scanned = true
+      this.onStop()
     },
-    addToStock () {
+    onStop() {
+      Quagga.stop()
+      this.cameraStatus = 0
+    },
+    clear() {
+      this.scanned = false
+      this.onStop()
+    },
+    addToStock() {
       this.$axios.post('https://192.168.0.21:8000/api/products', {
         code: this.product.product.code,
         isInStock: true,
